@@ -1,21 +1,23 @@
-class SoundsLibrary {
-    constructor() {
+var SoundsLibrary = /** @class */ (function () {
+    function SoundsLibrary() {
         this.sounds = [];
         this.initDummySounds();
     }
-    initDummySounds() {
+    SoundsLibrary.prototype.initDummySounds = function () {
         this.sounds.push({
             key: 'a',
-            src: 'audio/clap.wav',
+            src: 'audio/clap.wav'
         });
         this.sounds.push({
             key: 's',
-            src: 'audio/wierd.wav',
+            src: 'audio/wierd.wav'
         });
-    }
-}
-class DrumKitApplication {
-    constructor(recordChannelsAmount = 4) {
+    };
+    return SoundsLibrary;
+}());
+var DrumKitApplication = /** @class */ (function () {
+    function DrumKitApplication(recordChannelsAmount) {
+        if (recordChannelsAmount === void 0) { recordChannelsAmount = 4; }
         this.recordChannels = [];
         this.initRecordChannels(recordChannelsAmount);
         this.initDrumKitSounds();
@@ -23,116 +25,122 @@ class DrumKitApplication {
         this.initChannelUIButtons();
         this.initKeysUIButtons();
     }
-    initRecordChannels(amount) {
-        for (let i = 0; i < amount; i++) {
+    DrumKitApplication.prototype.initRecordChannels = function (amount) {
+        for (var i = 0; i < amount; i++) {
             this.recordChannels.push({
                 recordedSounds: [],
                 isRecording: false,
-                recordingStart: new Date(),
+                recordingStart: new Date()
             });
         }
-    }
-    initDrumKitSounds() {
+    };
+    DrumKitApplication.prototype.initDrumKitSounds = function () {
         this.sounds = new SoundsLibrary().sounds;
-    }
-    initDrumKitKeyboardListeners() {
-        this.sounds.forEach((sound) => {
-            document.addEventListener('keyup', (e) => {
+    };
+    DrumKitApplication.prototype.initDrumKitKeyboardListeners = function () {
+        var _this = this;
+        this.sounds.forEach(function (sound) {
+            document.addEventListener('keyup', function (e) {
                 if (e.key == sound.key) {
-                    this.playSound(sound);
+                    _this.playSound(sound);
                 }
             });
         });
-    }
-    playSound(sound, withRecord = true) {
-        const soundKeyBtn = document.getElementById(`s_${sound.key}`);
+    };
+    DrumKitApplication.prototype.playSound = function (sound, withRecord) {
+        if (withRecord === void 0) { withRecord = true; }
+        var soundKeyBtn = document.getElementById("s_" + sound.key);
         soundKeyBtn.classList.add('btn-dark');
         soundKeyBtn.classList.add('text-white');
-        setTimeout(() => {
+        setTimeout(function () {
             soundKeyBtn.classList.remove('btn-dark');
             soundKeyBtn.classList.remove('text-white');
         }, 100);
         new Audio(sound.src).play();
         if (withRecord)
             this.toRecording(sound);
-    }
-    toRecording(sound) {
-        this.recordChannels.forEach((rc) => {
+    };
+    DrumKitApplication.prototype.toRecording = function (sound) {
+        this.recordChannels.forEach(function (rc) {
             if (rc.isRecording) {
                 rc.recordedSounds.push({
-                    sound,
-                    timeOffset: new Date().getTime() - rc.recordingStart.getTime(),
+                    sound: sound,
+                    timeOffset: new Date().getTime() - rc.recordingStart.getTime()
                 });
             }
         });
-    }
-    initChannelUIButtons() {
-        const channelButtonsBox = document.querySelector('.record-channels');
-        const playChannelButtonsBox = document.querySelector('.play-channels');
-        this.recordChannels.forEach((_, index) => {
+    };
+    DrumKitApplication.prototype.initChannelUIButtons = function () {
+        var _this = this;
+        var channelButtonsBox = document.querySelector('.record-channels');
+        var playChannelButtonsBox = document.querySelector('.play-channels');
+        this.recordChannels.forEach(function (_, index) {
             // Record buttons
-            const channelRecordButton = document.createElement('button');
+            var channelRecordButton = document.createElement('button');
             channelRecordButton.classList.add('record-channel-button');
             channelRecordButton.classList.add('btn');
             channelRecordButton.classList.add('btn-lg');
             channelRecordButton.classList.add('btn-primary');
             channelRecordButton.classList.add('me-2');
-            channelRecordButton.innerHTML = `${index + 1}`;
-            channelRecordButton.addEventListener('click', () => {
-                this.toggleRecording(index);
+            channelRecordButton.innerHTML = "" + (index + 1);
+            channelRecordButton.addEventListener('click', function () {
+                _this.toggleRecording(index);
             });
             channelButtonsBox.appendChild(channelRecordButton);
             // Play buttons
-            const playRecordButton = document.createElement('button');
+            var playRecordButton = document.createElement('button');
             playRecordButton.classList.add('play-channel-button');
             playRecordButton.classList.add('btn');
             playRecordButton.classList.add('btn-lg');
             playRecordButton.classList.add('btn-primary');
             playRecordButton.classList.add('me-2');
-            playRecordButton.innerHTML = `${index + 1}`;
-            playRecordButton.addEventListener('click', () => {
-                this.playRecording(index);
+            playRecordButton.innerHTML = "" + (index + 1);
+            playRecordButton.addEventListener('click', function () {
+                _this.playRecording(index);
             });
             playChannelButtonsBox.appendChild(playRecordButton);
         });
-    }
-    initKeysUIButtons() {
-        const soundKeyBox = document.querySelector('.sound-keys');
-        this.sounds.forEach((s) => {
-            const soundButton = document.createElement('button');
-            soundButton.innerHTML = `${s.key}`;
+    };
+    DrumKitApplication.prototype.initKeysUIButtons = function () {
+        var _this = this;
+        var soundKeyBox = document.querySelector('.sound-keys');
+        this.sounds.forEach(function (s) {
+            var soundButton = document.createElement('button');
+            soundButton.innerHTML = "" + s.key;
             soundButton.classList.add('btn');
             soundButton.classList.add('btn-lg');
             soundButton.classList.add('btn-outline-dark');
             soundButton.classList.add('me-2');
             soundButton.classList.add('p-5');
-            soundButton.id = `s_${s.key}`;
-            soundButton.addEventListener('click', () => {
-                this.playSound(s);
+            soundButton.id = "s_" + s.key;
+            soundButton.addEventListener('click', function () {
+                _this.playSound(s);
             });
             soundKeyBox.appendChild(soundButton);
         });
-    }
-    toggleRecordChannelButtonClasses(recordChannelIndex) {
-        const channelButtons = document.querySelectorAll('.record-channel-button');
+    };
+    DrumKitApplication.prototype.toggleRecordChannelButtonClasses = function (recordChannelIndex) {
+        var channelButtons = document.querySelectorAll('.record-channel-button');
         channelButtons[recordChannelIndex].classList.toggle('btn-primary');
         channelButtons[recordChannelIndex].classList.toggle('btn-danger');
-    }
-    toggleRecording(recordChannelIndex) {
+    };
+    DrumKitApplication.prototype.toggleRecording = function (recordChannelIndex) {
         this.toggleRecordChannelButtonClasses(recordChannelIndex);
         if (!this.recordChannels[recordChannelIndex].isRecording)
             this.recordChannels[recordChannelIndex].recordedSounds = [];
         this.recordChannels[recordChannelIndex].isRecording = !this.recordChannels[recordChannelIndex].isRecording;
         this.recordChannels[recordChannelIndex].recordingStart = new Date();
-    }
-    playRecording(recordChannelIndex) {
+    };
+    DrumKitApplication.prototype.playRecording = function (recordChannelIndex) {
+        var _this = this;
         if (!this.recordChannels[recordChannelIndex].isRecording) {
-            this.recordChannels[recordChannelIndex].recordedSounds.forEach((s) => {
-                setTimeout(() => {
-                    this.playSound(s.sound, false);
+            this.recordChannels[recordChannelIndex].recordedSounds.forEach(function (s) {
+                setTimeout(function () {
+                    _this.playSound(s.sound, false);
                 }, s.timeOffset);
             });
         }
-    }
-}
-const drumApp = new DrumKitApplication();
+    };
+    return DrumKitApplication;
+}());
+var drumApp = new DrumKitApplication();
