@@ -31,6 +31,14 @@ class SoundsLibrary {
 			key: 's',
 			src: 'audio/wierd.wav',
 		});
+		this.sounds.push({
+			key: 'd',
+			src: 'audio/FX2.wav',
+		});
+		this.sounds.push({
+			key: 'f',
+			src: 'audio/FX16.wav',
+		});
 	}
 }
 

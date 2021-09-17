@@ -44,7 +44,7 @@ class App {
 
     private renderClouds(): void {
         for(let i = 0; i < 50; i++) {
-            const icon = Math.random() + 1 >= this.weatherData.clouds.all / 100 + 1 ? 'bx-wind' : ' bx-cloud';
+            const icon = Math.random() >= this.weatherData.clouds.all / 100 ? 'bx-wind' : 'bx-cloud';
             const animationTime: number = 10/this.weatherData.wind.speed;
             this.appElement.querySelector('#weather-box').innerHTML +=
                 `<i class="bx ${icon} position-absolute text-dark animate-cloud" style="margin-left: ${Math.floor(Math.random() * 20)}rem; top: ${Math.floor(Math.random() * 90)}%; animation-delay: ${Math
